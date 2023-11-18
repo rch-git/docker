@@ -76,3 +76,23 @@ docker kill 424d7696d8c15376db305ecbd0890c0936f270199944084d77b5e08a43ae7600
 
 -------------------------
 
+> docker create --name myredis redis
+
+> docker start myredis
+
+to get into the cli in the container - 
+λ docker exec -it myredis redis-cli
+
+127.0.0.1:6379> set myvalue 5
+
+127.0.0.1:6379> get myvalue
+
+-it allows you to interact with the cli in the terminal where the command ran
+
+-i -> attach my terminal to the standard in process
+-t -> does a formatting among other things
+
+--------------
+this will allow me to access the shell of any container
+
+λ docker exec -it myredis sh
