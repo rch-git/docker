@@ -1,0 +1,78 @@
+dovker version - get the version of the docker desktop client
+
+Server: Docker Desktop 4.24.2 (124339)
+
+------------------------
+
+> docker run hello-world
+
+- download the snapshot of hello-world from docker hub and create a local container
+- the only thing this container will do is print the hello world, and exit. 
+- check the logs in docker client for the output
+
+----------------------------
+
+docker run busy-box
+
+> docker run busybox echo Hello World
+
+- downloads the busybox image and creates a container locally
+- the override command "Hello World" will get printed to the console and the container will exit
+
+> docker run busybox ls -ll
+
+will print the folders within the container and it will exit
+
+------------------------
+
+show running containers
+
+> docker ps
+
+> docker run busybox ping google.com
+> docker ps
+
+CONTAINER ID   IMAGE     COMMAND             CREATED          STATUS          PORTS     NAMES
+2f6e09df755a   busybox   "ping google.com"   17 seconds ago   Up 16 seconds             cool_kare
+
+> docker ps --all
+
+show all the containers that have been created. 
+
+
+docker run = docker create + docker start (run is a combination of both these commands)
+
+C:\git\github\docker(master -> origin)
+λ docker create hello-world
+3de16ea93cb90486fdd1c27cf02d13dfb91c6dc746cc7de52331ba278e2e3545
+
+C:\git\github\docker(master -> origin)
+λ docker start -a 3de16ea93cb90486fdd1c27cf02d13dfb91c6dc746cc7de52331ba278e2e3545
+
+-a command makes docker watch for the output coming from it, and print it out in the current terminal. if -a is not given, the output will still exist in the container log in docker desktop
+
+-----------------------------
+
+> docker ps --all
+
+λ docker system prune
+this will delete all the containers and also delete the build cache
+
+it will also tell you how much space has been reclaimed, down in the log. 
+
+----------------------
+
+docker create busybox ping google.com
+
+docker start 424d7696d8c15376db305ecbd0890c0936f270199944084d77b5e08a43ae7600
+
+docker logs 424d7696d8c15376db305ecbd0890c0936f270199944084d77b5e08a43ae7600
+ 
+docker stop 424d7696d8c15376db305ecbd0890c0936f270199944084d77b5e08a43ae7600 
+	if the container does not automatically stop in 10 seconds, it will kill it.
+
+docker kill 424d7696d8c15376db305ecbd0890c0936f270199944084d77b5e08a43ae7600 
+	kill instancely
+
+-------------------------
+
