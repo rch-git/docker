@@ -1,0 +1,7 @@
+λ docker build .
+
+λ docker create --name custom-redis sha256:b06a03bee3ddee60deed0c8ec8d7650b1cad72fcfa372920ab0e62ed38bed566
+
+λ docker start custom-redis
+
+λ docker exec -it custom-redis redis-cli
