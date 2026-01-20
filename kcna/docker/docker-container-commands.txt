@@ -1,0 +1,20 @@
+docker pull spurin/funbox
+
+# using the digest to pull an image
+docker.io/spurin/funbox@sha256:8a01842539972507846c938e120ecc1f5b9f921da77f4d0e81cae17f42f10b90
+
+#get the json data about an image
+docker buildx imagetools inspect spurin/funbox --raw
+
+# to print the checksum which will be the same as the digest
+docker buildx imagetools inspect spurin/funbox --raw | openssl dgst -sha256
+
+#docker save to save the image to a local file
+sysuser@ubuntudev:~/temp/funbox$ docker save spurin/funbox -o funbox.tar
+
+#inspect the json file in the extracted image
+sysuser@ubuntudev:~/temp/funbox/funbox$ cat index.json | jq
+
+#this shows all the layers that are non 0 bytes
+sysuser@ubuntudev:~/temp/funbox/funbox$ cat manifest.json | jq
+
