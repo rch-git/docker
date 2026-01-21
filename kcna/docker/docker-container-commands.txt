@@ -9,7 +9,7 @@ docker buildx imagetools inspect spurin/funbox --raw
 # to print the checksum which will be the same as the digest
 docker buildx imagetools inspect spurin/funbox --raw | openssl dgst -sha256
 
-#docker save to save the image to a local file
+#docker save the image to a local file
 sysuser@ubuntudev:~/temp/funbox$ docker save spurin/funbox -o funbox.tar
 
 #inspect the json file in the extracted image
@@ -18,3 +18,39 @@ sysuser@ubuntudev:~/temp/funbox/funbox$ cat index.json | jq
 #this shows all the layers that are non 0 bytes
 sysuser@ubuntudev:~/temp/funbox/funbox$ cat manifest.json | jq
 
+#this will return the same checksum as the filename. getsum is an alias in ~/.bashrc
+cat blobs/sha256/d1696d1bd5b528ef1cb81e6d4831570fbd9f5a178dc547247f208ec3678a0fd1 | getsum
+
+#this will print all the contents of the digest in pretty json format
+cat 8a01842539972507846c938e120ecc1f5b9f921da77f4d0e81cae17f42f10b90 | jq
+
+#pull the latest version of the alpine imagine using the traditional docker command format
+docker pull alpine:latest
+
+#output
+latest: Pulling from library/alpine
+1074353eec0d: Pull complete 
+5c1f58ba4e0d: Download complete 
+644afed44dca: Download complete 
+Digest: sha256:865b95f46d98cf867a156fe4a135ad3fe50d2056aa3f25ed31662dff6da4eb62
+Status: Downloaded newer image for alpine:latest
+docker.io/library/alpine:latest
+
+#identify the image id and digest
+docker images --digests alpine
+
+#remove the alpine imagine
+docker rmi alpine
+
+#query images on the system and confirm that alpine doesnt exist
+docker images
+
+#Capture a specific version of ubuntu by using the tag 20.04 and the alternative command syntax in the format of docker noun verb
+docker image pull ubuntu:20.04
+
+#Check the digest, using the alternative command syntax
+#this is the same as docker images --disgests ubuntu:20.04
+docker image list --digests ubuntu:20.04
+
+#Inspect the layers of this image using docker history, via the alternative command syntax
+docker image history ubuntu:20.04
