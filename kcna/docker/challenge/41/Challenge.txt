@@ -1,0 +1,22 @@
+Challenge:
+
+Create and run 3 Nginx containers with different content using volumes. Each container should serve its own custom HTML page. Each container should be accessible on the localhost with it’s own unique port.
+
+# create 3 index.html files. name then index1.html, index2.html, index3.html
+sysuser@ubuntudev:~/git/docker/kcna/docker/challenge/41$ touch index1.html index2.html index3.html
+
+# add content to files
+sysuser@ubuntudev:~/git/docker/kcna/docker/challenge/41$ echo "HTML 1" >> index1.html
+sysuser@ubuntudev:~/git/docker/kcna/docker/challenge/41$ echo "HTML 2" > index2.html
+sysuser@ubuntudev:~/git/docker/kcna/docker/challenge/41$ echo "HTML 3" > index3.html
+
+# create 3 nginx containers, serve 12345, 12346, 12347 and map the index.html inside of each container with the respective files on the host drive
+#container 1
+sysuser@ubuntudev:~/git/docker/kcna/docker/challenge/41$ docker run --rm -it -d -p 12345:80 --name nginx1 -v /home/sysuser/git/docker/kcna/docker/challenge/41/index1.html:/usr/share/nginx/html/index.html nginx
+
+#container 2
+sysuser@ubuntudev:~/git/docker/kcna/docker/challenge/41$ docker run --rm -itd -p 12346:80 -v /home/sysuser/git/docker/kcna/docker/challenge/41/index2.html:/usr/share/nginx/html/index.html --name nginx2 nginx
+
+#container 3
+
+docker run -itd --rm --name nginx3 -p 12347:80 -v /home/sysuser/git/docker/kcna/docker/challenge/41/index3.html:/usr/share/nginx/html/index.html nginx

@@ -197,3 +197,8 @@ OUTPUT:
 
 #use the path in the docker run command to mount a volume
 docker run -d --rm --name mynginx -p 12345:80 -v /home/sysuser/git/docker/kcna/docker/resources/my_web_page/index.html:/usr/share/nginx/html/index.html nginx 
+
+# use the following command to append the year to the webpage. refresh localhost:12345 to see the changes. 
+sysuser@ubuntudev:~/git/docker/kcna/docker/resources/my_web_page$ echo " 2026"  >> index.html
+
+
