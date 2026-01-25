@@ -201,4 +201,9 @@ docker run -d --rm --name mynginx -p 12345:80 -v /home/sysuser/git/docker/kcna/d
 # use the following command to append the year to the webpage. refresh localhost:12345 to see the changes. 
 sysuser@ubuntudev:~/git/docker/kcna/docker/resources/my_web_page$ echo " 2026"  >> index.html
 
+-----------building container images---------------------
+- cmatrix source code into a container image
+- optimize
+- push to container registry
+- we will use alpine
 

@@ -1,0 +1,74 @@
+building the cmatrix custom container
+
+#pull alpine linux
+docker pull alpine
+
+#build docker file /home/sysuser/git/docker/kcna/docker/cmatrix/Dockerfile
+sysuser@ubuntudev:~/git/docker/kcna/docker/cmatrix$ docker build . -t rc03/cmatrix
+
+#run and shell into the image
+sysuser@ubuntudev:~/git/docker/kcna/docker/cmatrix$ docker run --rm -it --name cmatrix rc03/cmatrix sh
+
+#update apk inside the container
+apk update
+
+#install git inside the container
+apk add git
+
+#clone source code for cmatrix. this will run on root. /cmatrix will be created
+git clone https://github.com/spurin/cmatrix.git
+
+#install autoconf
+apk add autoconf
+
+# add automake
+apk add automake
+
+#run autoreconf -i
+autoreconf -i
+
+# add alpine sdk
+apk add alpine-sdk
+
+#add ncurses packages
+apk add ncurses-dev ncurses-static
+
+# create fonts directory
+/cmatrix # mkdir -p /usr/lib/kbd/consolefonts /usr/share/consolefonts
+
+#run configure
+./configure LDFLAGS="-static"
+
+#run make to compile everything
+make
+
+OUTPUT: 
+cmatrix # make
+make  all-am
+make[1]: Entering directory '/cmatrix'
+gcc -DHAVE_CONFIG_H -I.     -g -O2 -MT cmatrix.o -MD -MP -MF .deps/cmatrix.Tpo -c -o cmatrix.o cmatrix.c
+mv -f .deps/cmatrix.Tpo .deps/cmatrix.Po
+gcc  -g -O2  -static -o cmatrix cmatrix.o  -lncurses  -lncurses
+make[1]: Leaving directory '/cmatrix'
+
+# This should produce cmatrix binary. run the following to confirm
+/cmatrix # ls -l /cmatrix/cmatrix
+
+OUTPUT: 
+-rwxr-xr-x    1 root     root        843640 Jan 25 18:04 /cmatrix/cmatrix
+
+#run the binary to make it work
+/cmatrix/cmatrix
+
+OUTPUT: 
+matrix screensaver
+
+##### this concludes building the binary needed for cmatrix to run ######################
+
+# save history of the shell and copy it out to the host
+# run this in the container
+/tmp # history > shellhistory.txt
+
+# run this on the host
+sysuser@ubuntudev:~/git/docker/kcna/docker/challenge/41$ docker cp cmatrix:/tmp/shellhistory.txt ~/temp
+
