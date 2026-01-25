@@ -29,3 +29,11 @@ COPY --from=cmatrixbuilder /cmatrix/cmatrix /cmatrix/cmatrix
 USER	thomas
 ENTRYPOINT	["/cmatrix/cmatrix"]
 CMD	["-M",  "Hello World", "-k"]
+
+# To build this image use - 
+# sysuser@ubuntudev:~/git/docker/kcna/docker/cmatrix$ docker build . -t rc03/cmatrix
+
+# for multi architecture image, use the following command
+# 1. docker buildx create --name buildx-multi-arch
+# 2. docker buildx use buildx-multi-arch
+# 3. docker buildx build --no-cache --platform linux/amd64,linux/arm64/v8 . -t rc03/cmatrix --push
