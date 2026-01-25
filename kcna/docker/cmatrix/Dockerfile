@@ -31,9 +31,10 @@ ENTRYPOINT	["/cmatrix/cmatrix"]
 CMD	["-M",  "Hello World", "-k"]
 
 # To build this image use - 
-# sysuser@ubuntudev:~/git/docker/kcna/docker/cmatrix$ docker build . -t rc03/cmatrix
+#  docker build . -t rc03/cmatrix
 
 # for multi architecture image, use the following command
 # 1. docker buildx create --name buildx-multi-arch
 # 2. docker buildx use buildx-multi-arch
 # 3. docker buildx build --no-cache --platform linux/amd64,linux/arm64/v8 . -t rc03/cmatrix --push
+# 4. Run the container with the following command: docker run --rm -it rc03/cmatrix

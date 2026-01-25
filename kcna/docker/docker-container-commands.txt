@@ -207,3 +207,5 @@ sysuser@ubuntudev:~/git/docker/kcna/docker/resources/my_web_page$ echo " 2026"  
 - push to container registry
 - we will use alpine
 
+# pull alpine
+
