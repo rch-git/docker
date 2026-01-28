@@ -1,0 +1,84 @@
+# create docker network
+docker network create k3snet
+
+# verify that the network is created
+docker network ls
+
+# OUTPUT:
+sysuser@ubuntudev:~/Downloads$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+8e7829d16c21   bridge    bridge    local
+2f73a1fcb87d   host      host      local
+769e11113b71   k3snet    bridge    local
+d5fe4dfa890a   none      null      local
+
+# inspect the network
+docker network inspect k3snet
+
+# OUTPUT
+sysuser@ubuntudev:~/Downloads$ docker network inspect k3snet
+[
+    {
+        "Name": "k3snet",
+        "Id": "769e11113b71bab7f1a32d8b58de8ffd2e6079005a64db8c5e88a410faed7372",
+        "Created": "2026-01-28T15:21:49.951504442Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "IPRange": "",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {
+            "com.docker.network.enable_ipv4": "true",
+            "com.docker.network.enable_ipv6": "false"
+        },
+        "Labels": {},
+        "Containers": {},
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.18.0.0/16": {
+                        "IPsInUse": 3,
+                        "DynamicIPsAvailable": 65533
+                    }
+                }
+            }
+        }
+    }
+]
+
+# access the directory where the docker files are present
+
+cd /home/sysuser/git/docker/kubernetes-cluster
+
+# build the docker image
+docker build -t controlplane-image .
+
+# create a container from this image
+docker compose up -d
+
+# ensure that the container is created
+docker ps
+
+# OUTPUT
+CONTAINER ID   IMAGE                COMMAND            CREATED          STATUS          PORTS     NAMES
+27dd501640c5   controlplane-image   "sleep infinity"   17 seconds ago   Up 17 seconds             controlplane
+
+# access the container via the terminal
+

@@ -1,0 +1,6 @@
+# k3s-config/config.yaml
+containerd:
+  snapshotter: native
+
+write-kubeconfig: /output/k3s.yaml
+write-kubeconfig-mode: "644"

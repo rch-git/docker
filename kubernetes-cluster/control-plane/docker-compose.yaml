@@ -1,0 +1,29 @@
+---
+services:
+  controlplane:
+    image: controlplane-image
+    container_name: controlplane
+    hostname: controlplane
+    privileged: true
+    command:
+      - k3s
+      - server
+      - --config
+      - /etc/rancher/k3s/config.yaml
+    ports:
+      - 6443:6443
+    volumes:
+      - k3s-data:/var/lib/rancher/k3s
+      - k3s-etc:/etc/rancher/k3s
+      - ./k3s-config/config.yaml:/etc/rancher/k3s/config.yaml:ro
+      - ./kubeconfig:/output
+    networks:
+      - k3snet
+volumes:
+  k3s-data: null
+  k3s-etc: null
+networks:
+  k3snet:
+    external: true
+    name: k3snet
+

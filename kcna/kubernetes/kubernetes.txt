@@ -1,0 +1,20 @@
+low level container runtime
+
+- spawning and running containers
+- responsible for interacting with lowlevel components - namespaces and cgroups
+	- crun
+	- kata runtime
+	- gvisor
+- high level container runtimes are referred to container engines
+- low level container runtimes are not typically installed - only high level CRT (ex - containerd)
+- high level CRT - pull images, interacts with runc, 
+
+- kubelet  exists in both the node and the control plane
+- kubelet can receive requests via api or by monitoring /etc/kubernetes/manifests
+- kubelet passes these requests to containerd, which in turn interact with runc
+- in control plane, kubelet is responsible for creating static pods - etcd, kube api server, kube scheduler, controller-manager
+- kube-proxy is not a static pod.
+- codedns is a kubernetes deployment. it is not a static pod
+- controller-manager is a static pod
+- kubectl communicates with kube api server
+- cloud controller manager is a non static pod. seen in public cloud provider managed kubernetes. 

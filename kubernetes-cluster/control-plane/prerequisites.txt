@@ -1,0 +1,3 @@
+Create docker network -
+
+docker network create k3snet
