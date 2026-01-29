@@ -1,0 +1,4 @@
+server: https://192.168.19.131:6443
+token: K1064f984c0a4069d977b609f59a0d915ed3b25dcb5209562a5744e99a540f69aae::server:11ff0a6ca4501c1f79c20f82cf8cea40
+node-name: worker1
+

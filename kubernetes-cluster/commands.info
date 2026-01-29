@@ -80,5 +80,37 @@ docker ps
 CONTAINER ID   IMAGE                COMMAND            CREATED          STATUS          PORTS     NAMES
 27dd501640c5   controlplane-image   "sleep infinity"   17 seconds ago   Up 17 seconds             controlplane
 
-# access the container via the terminal
+sysuser@ubuntudev:~/git/docker$ kubectl --kubeconfig=/home/sysuser/git/docker/kubernetes-cluster/control-plane/kubeconfig/k3s.yaml proxy
+
+# access the container shell
+docker exec -it controlplane bash
+
+########## configuring the worker node #####################
+
+# get the join token. run this in the container
+
+cat /var/lib/rancher/k3s/server/token
+K1026c9ccd4980c6de0c2f0c8d3a4f1f4963d950b60c374dee5ec68e7224dcc2965::server:5e13bdd6802019ad5bbb52bd53900cc3
+
+
+mkdir -p /tmp/k8s-certs
+
+# Decode CA certificate
+grep 'certificate-authority-data:' k3s.yaml | awk '{print $2}' | base64 -d > /tmp/k8s-certs/ca.crt
+
+# Decode client certificate
+grep 'client-certificate-data:' k3s.yaml | awk '{print $2}' | base64 -d > /tmp/k8s-certs/client.crt
+
+# Decode client key
+grep 'client-key-data:' k3s.yaml | awk '{print $2}' | base64 -d > /tmp/k8s-certs/client.key
+
+/tmp/k8s-certs/ca.crt
+/tmp/k8s-certs/client.crt
+/tmp/k8s-certs/client.key
+
+
+curl --cacert /tmp/k8s-certs/ca.crt \
+     --cert /tmp/k8s-certs/client.crt \
+     --key /tmp/k8s-certs/client.key \
+     https://192.168.19.131:6443/api/v1/nodes
 

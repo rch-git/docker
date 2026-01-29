@@ -17,6 +17,7 @@ services:
       - k3s-etc:/etc/rancher/k3s
       - ./k3s-config/config.yaml:/etc/rancher/k3s/config.yaml:ro
       - ./kubeconfig:/output
+      - ~/temp:/tmp
     networks:
       - k3snet
 volumes:
