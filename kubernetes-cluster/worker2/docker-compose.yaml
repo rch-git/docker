@@ -1,9 +1,9 @@
 ---
 services:
-  worker1:
+  worker2:
     image: worker-image
-    container_name: worker1
-    hostname: worker1
+    container_name: worker2
+    hostname: worker2
     privileged: true
     command:
       - k3s
@@ -11,20 +11,20 @@ services:
       - --with-node-id
       - --server=https://192.168.19.131:6443
       - --token=K10d4179a2ad4fc257e71213c25f4fd4c71df1188d0b85682bf9b17ce76fedd15a8::server:e8bfa8274072e8308da94dbb29852fba
-      - --node-name=worker1
+      - --node-name=worker2
     ports:
-      - 6444:6443
+      - 6445:6443
     volumes:
-      - k3s-worker1-data:/var/lib/rancher/k3s
-      - k3s-worker1-etc:/etc/rancher/k3s
-      - ./k3s-config/:/etc/rancher/k3s/
+      - k3s-worker2-data:/var/lib/rancher/k3s
+      - k3s-worker2-etc:/etc/rancher/k3s
+      - ./k3s-config/:/etc/rancher/k3s
       - ./kubeconfig:/output
       - ~/temp:/tmp
     networks:
       - k3snet
 volumes:
-  k3s-worker1-data: null
-  k3s-worker1-etc: null
+  k3s-worker2-data: null
+  k3s-worker2-etc: null
 networks:
   k3snet:
     external: true

@@ -15,6 +15,7 @@ RUN	apt-get update && apt-get install -y --no-install-recommends \
 		iproute2 \
 		bash \
 		tzdata \
+		openssh-server \
 		&& rm -rf /var/lib/apt/lists/*
 
 # Download k3s binary directly (NO installer, NO systemd)
@@ -28,5 +29,8 @@ RUN curl -L https://github.com/k3s-io/k3s/releases/latest/download/k3s \
 # create the directories that are used by k3s
 
 RUN	mkdir -p /var/log/k3s	/etc/rancher/k3s
+
+# sshd runtime dir
+RUN mkdir -p /var/run/sshd
 
 CMD	["sleep", "infinity"]

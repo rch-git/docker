@@ -90,8 +90,7 @@ docker exec -it controlplane bash
 # get the join token. run this in the container
 
 cat /var/lib/rancher/k3s/server/token
-K1026c9ccd4980c6de0c2f0c8d3a4f1f4963d950b60c374dee5ec68e7224dcc2965::server:5e13bdd6802019ad5bbb52bd53900cc3
-
+K10d4179a2ad4fc257e71213c25f4fd4c71df1188d0b85682bf9b17ce76fedd15a8::server:e8bfa8274072e8308da94dbb29852fba
 
 mkdir -p /tmp/k8s-certs
 
@@ -108,9 +107,11 @@ grep 'client-key-data:' k3s.yaml | awk '{print $2}' | base64 -d > /tmp/k8s-certs
 /tmp/k8s-certs/client.crt
 /tmp/k8s-certs/client.key
 
-
+# add the following to docker compose to make the ip trusted by curl - --tls-san=192.168.19.131
 curl --cacert /tmp/k8s-certs/ca.crt \
      --cert /tmp/k8s-certs/client.crt \
      --key /tmp/k8s-certs/client.key \
      https://192.168.19.131:6443/api/v1/nodes
+
+
 
