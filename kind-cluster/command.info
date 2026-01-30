@@ -1,2 +1,2 @@
-# 
+# start the cluster
 kind create cluster --config kind-1c2w.yaml
