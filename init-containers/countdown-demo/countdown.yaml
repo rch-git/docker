@@ -1,13 +1,23 @@
 apiVersion: v1
 kind: Pod
 metadata:
-    name: countdownpod
+  name: countdownpod
 spec:
-    initContainers:
-    - name: initcountdown
-      image: busybox:latest
-      command: [ 'sh', '-c', 'for i in \$(seq 120 -1 0); do echo "initcountdown: \$i"; sleep 1; done' ]
-    containers:
-    - name: maincontainer
-      image: busybox:latest
-      command: ['sh', '-c', 'while true; do echo "$(date) - Hello from maincontainer"; sleep 5; if [ -f /tmp/crash ]; then exit 1; fi; done']
+  initContainers:
+  - name: initcountdown
+    image: busybox:latest
+    command:
+      - sh
+      - -c
+      - |
+        i=45
+        while [ "$i" -ge 0 ]; do
+          echo "initcountdown: $i"
+          i=$((i - 1))
+          sleep 1
+        done
+
+  containers:
+  - name: maincontainer
+    image: busybox:latest
+    command: [ 'sh', '-c', 'while true; do echo "$(date) - Hello from maincontainer"; sleep 3; if [ -f /tmp/crash ]; then exit 1; fi; done' ]
