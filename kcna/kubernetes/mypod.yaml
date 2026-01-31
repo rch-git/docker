@@ -14,7 +14,7 @@ spec:
     args:
     - /bin/sh
     - -c
-    - while true; do echo "$(date +'%T') - Hello from sidecar"; sleep 5; if [ -f /tmp/crash ]; then exit 1; fi; done
+    - while true; do echo "$(date) - Hello from sidecar"; sleep 5; if [ -f /tmp/crash ]; then exit 1; fi; done
     resources: {}
   dnsPolicy: ClusterFirst
   restartPolicy: Always

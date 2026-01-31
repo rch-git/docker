@@ -113,11 +113,11 @@ root@klc-control-plane:/# kubectl apply -f combined.yaml
 root@klc-control-plane:/# kubectl delete -f combined.yaml --now
 
 
-# copy mypods.yaml from host to controlplane container
-sysuser@ubuntudev:~/git/docker/kind-cluster$ docker cp /home/sysuser/git/docker/kcna/kubernetes/mypods.yaml klc-control-plane:/mypods.yaml
+# copy mypod.yaml from host to controlplane container
+sysuser@ubuntudev:~/git/docker/kind-cluster$ docker cp /home/sysuser/git/docker/kcna/kubernetes/mypod.yaml klc-control-plane:/mypod.yaml
 
-# apply mypods.yaml to create the pod with two containers
-root@klc-control-plane:/# kubectl apply -f mypods.yaml 
+# apply mypod.yaml to create the pod with two containers
+root@klc-control-plane:/# kubectl apply -f mypod.yaml 
 
 # this would show 2/2 under ready column because there are two containers running in the same pod
 root@klc-control-plane:/# kubectl get pods -o wide
@@ -158,3 +158,4 @@ Commercial support is available at
 pod "curlpod" deleted from default namespace
 
 # to make sure the sidecar is doing what its supposed to, we can get the logs from the container in the pod
+root@klc-control-plane:/# kubectl logs mypod -c ubuntu-sidecar
