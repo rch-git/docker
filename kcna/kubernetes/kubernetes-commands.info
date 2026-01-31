@@ -159,3 +159,16 @@ pod "curlpod" deleted from default namespace
 
 # to make sure the sidecar is doing what its supposed to, we can get the logs from the container in the pod
 root@klc-control-plane:/# kubectl logs mypod -c ubuntu-sidecar
+
+# create a crash file so that the side car would crash
+root@klc-control-plane:/# kubectl exec -it mypod -c ubuntu-sidecar -- touch /tmp/crash
+
+# get pod information
+root@klc-control-plane:/# kubectl get pods -o wide
+NAME    READY   STATUS   RESTARTS      AGE   IP           NODE         NOMINATED NODE   READINESS GATES
+mypod   1/2     Error    2 (80s ago)   22m   10.244.2.5   klc-worker   <none>           <none>
+
+
+root@klc-control-plane:/# kubectl get pods -o wide
+NAME    READY   STATUS    RESTARTS      AGE   IP           NODE         NOMINATED NODE   READINESS GATES
+mypod   2/2     Running   3 (43s ago)   23m   10.244.2.5   klc-worker   <none>           <none>
