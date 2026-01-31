@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Pod
 metadata:
-    name: initdemo-pod
+    name: initdemopod
     labels:
         app.kubernetes.io/name: initdemo
 spec:
     containers:
     - name: myapp-busybox-container
       image: busybox:latest
-      command: [ 'sh', '-c', 'echo "The app is running" && sleep 20' ]
+      command: [ 'sh', '-c', 'while true; do echo "$(date) - Hello from myapp-busybox-container"; sleep 5; if [ -f /tmp/crash ]; then exit 1; fi; done' ]
     initContainers:
     - name: init-mydb
       image: busybox:latest
@@ -16,3 +16,4 @@ spec:
     - name: init-myservice
       image: busybox:latest
       command: [ 'sh', '-c', 'until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo "waiting for myservice"; sleep 2; done' ]
+    restartPolicy: Always
