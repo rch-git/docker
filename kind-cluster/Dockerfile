@@ -6,7 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
 RUN apt-get update && \
-    apt-get install -y openssh-server iputils-ping curl bash iproute2 iptables tzdata ca-certificates && \
+    apt-get install -y software-properties-common --no-install-recommends && \
+    apt-get install -y openssh-server iputils-ping curl bash iproute2 iptables tzdata ca-certificates nano && \
     mkdir -p /var/run/sshd /root/.ssh && \
     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \

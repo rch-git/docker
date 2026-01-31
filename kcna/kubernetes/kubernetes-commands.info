@@ -1,0 +1,123 @@
+# create kind cluster
+kind create cluster --config ~/git/docker/kind-cluster/klc.yaml
+
+# to delete cluster
+kind delete cluster --name=klc
+
+# shell into the control plane
+docker exec -it klc-control-plane bash
+
+# stop kind containers
+docker stop $(docker ps -q --filter "name=klc")
+
+# to start kind containers
+docker start $(docker ps -aq --filter "name=klc")
+
+# run these on the kind cluster
+kubectl run nginx --image=nginx
+
+kubectl get pods
+
+kubectl logs pod/nginx
+
+# get more pod info
+kubectl get pods -o wide
+
+# output
+NAME    READY   STATUS    RESTARTS   AGE    IP           NODE          NOMINATED NODE   READINESS GATES
+nginx   1/1     Running   0          115s   10.244.1.2   klc-worker2   <none>           <none>
+
+# install ping on the control plane node to be able to ping pod IPs
+apt update
+apt install -y iputils-ping
+
+# curl nginx in the pod
+root@klc-control-plane:/# curl 10.244.1.2
+
+# run port forward on the host machine to expose nginx in the pod to the host
+# access http://127.0.0.1:8080/ in the browser
+sysuser@ubuntudev:~/git/docker$ kubectl port-forward pod/nginx 8080:80
+
+# curl can also be used to access nginx on the pod
+sysuser@ubuntudev:~/git/docker$ curl localhost:8080
+
+# run this on the control plane. this will start a curl pod which will curl the nginx pod and exit
+kubectl run -it --rm curlpod --image=curlimages/curl --restart=Never -- 10.244.1.2
+
+# run ubuntu pod in the background
+kubectl run ubuntupod --image=ubuntu sleep infinity 
+
+# run bash shell inside the ubuntu pod which is currently sleeping
+kubectl exec -it ubuntupod -- bash
+
+# run the following inside ubuntupod
+ps -ef
+
+# output
+root@ubuntupod:/# ps -ef
+UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 23:55 ?        00:00:00 sleep infinity
+root          12       0  0 23:57 pts/0    00:00:00 bash
+root          21      12  0 23:58 pts/0    00:00:00 ps -ef
+
+# run from control plane pod # 
+
+# delete both pods 
+kubectl delete pod/nginx pod/ubuntupod --now
+
+# we can use a dry run to output pod config  as a yaml and pipe it to a file using tee
+kubectl run nginxpod --image=nginx --dry-run=client -o yaml | tee nginxpod.yaml
+
+# use the create option to create the pod by specifying the yaml file
+root@klc-control-plane:/# kubectl create -f nginxpod.yaml
+
+# create ubuntu pod
+root@klc-control-plane:/# kubectl run ubuntupod --image=ubuntu --dry-run=client -o yaml sleep infinity | tee ubuntupod.yaml
+
+# create the pod. apply command can be used
+root@klc-control-plane:/# kubectl apply -f ubuntupod.yaml 
+
+# get the pods
+root@klc-control-plane:/# kubectl get pods -o wide
+
+# output
+NAME        READY   STATUS    RESTARTS   AGE     IP           NODE          NOMINATED NODE   READINESS GATES
+nginxpod    1/1     Running   0          4m51s   10.244.2.2   klc-worker2   <none>           <none>
+ubuntupod   1/1     Running   0          22s     10.244.1.2   klc-worker    <none>           <none>
+
+# we want to combine both the yaml files into one file called combined.yaml
+# grep to make sure both the yaml files exist
+root@klc-control-plane:/# ls -l | grep yaml
+
+# output
+root@klc-control-plane:/# ls -l | grep yaml
+-rw-r--r--   1 root root  215 Jan 31 00:32 nginxpod.yaml
+-rw-r--r--   1 root root  256 Jan 31 00:38 ubuntupod.yaml
+
+# run the following
+root@klc-control-plane:/# { cat nginxpod.yaml ; echo "---"; cat ubuntupod.yaml; } | tee combined.yaml
+
+# run the grep command
+root@klc-control-plane:/# ls -l | grep yaml
+
+# output
+root@klc-control-plane:/# ls -l | grep yaml
+-rw-r--r--   1 root root  475 Jan 31 00:44 combined.yaml
+-rw-r--r--   1 root root  215 Jan 31 00:32 nginxpod.yaml
+-rw-r--r--   1 root root  256 Jan 31 00:38 ubuntupod.yaml
+
+# apply the combined yaml
+root@klc-control-plane:/# kubectl apply -f combined.yaml 
+
+# delete the pods
+root@klc-control-plane:/# kubectl delete -f combined.yaml --now
+
+
+# copy mypods.yaml from host to controlplane container
+sysuser@ubuntudev:~/git/docker/kind-cluster$ docker cp /home/sysuser/git/docker/kcna/kubernetes/mypods.yaml klc-control-plane:/mypods.yaml
+root@klc-control-plane:/# kubectl apply -f mypods.yaml 
+
+# this would show 2/2 under ready column because there are two containers running in the same pod
+root@klc-control-plane:/# kubectl get pods -o wide
+NAME    READY   STATUS    RESTARTS   AGE     IP           NODE         NOMINATED NODE   READINESS GATES
+mypod   2/2     Running   0          3m36s   10.244.1.4   klc-worker   <none>           <none>

@@ -96,3 +96,6 @@ to get into the cli in the container -
 this will allow me to access the shell of any container
 
 λ docker exec -it myredis sh
+
+sysuser@ubuntudev:~/git/docker/kind-cluster$ docker run -it --rm curlimages/curl https://duckduckgo.com
+
