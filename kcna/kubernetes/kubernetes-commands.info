@@ -115,9 +115,46 @@ root@klc-control-plane:/# kubectl delete -f combined.yaml --now
 
 # copy mypods.yaml from host to controlplane container
 sysuser@ubuntudev:~/git/docker/kind-cluster$ docker cp /home/sysuser/git/docker/kcna/kubernetes/mypods.yaml klc-control-plane:/mypods.yaml
+
+# apply mypods.yaml to create the pod with two containers
 root@klc-control-plane:/# kubectl apply -f mypods.yaml 
 
 # this would show 2/2 under ready column because there are two containers running in the same pod
 root@klc-control-plane:/# kubectl get pods -o wide
 NAME    READY   STATUS    RESTARTS   AGE     IP           NODE         NOMINATED NODE   READINESS GATES
 mypod   2/2     Running   0          3m36s   10.244.1.4   klc-worker   <none>           <none>
+
+
+# get all the information about mypod
+root@klc-control-plane:/# kubectl describe pod/mypod
+
+# curl the shared ip address of mypod
+root@klc-control-plane:/# kubectl run -it --rm curlpod --image=curlimages/curl --restart=Never -- 10.244.2.2
+
+# output
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+pod "curlpod" deleted from default namespace
+
+# to make sure the sidecar is doing what its supposed to, we can get the logs from the container in the pod
